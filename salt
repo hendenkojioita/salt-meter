@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>塩分濃度測定</title>
+
+<style>
+
+body {
+    font-family: sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.section {
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #eef6ff;
+}
+
+.area-note {
+    text-align: right;
+    color: #666;
+    font-size: 14px;
+    margin-top: -10px;
+    margin-bottom: 15px;
+}
+
+input {
+    width: 90%;
+    padding: 12px;
+    font-size: 18px;
+}
+
+button {
+    width: 90%;
+    padding: 12px;
+    font-size: 18px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.result {
+    margin-top: 20px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.final-result {
+    color: red;
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+}
+
+hr {
+    margin: 15px 0;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>塩分濃度測定</h1>
+
+<!-- 金の手SS -->
+
+<div class="section">
+
+    <h2>① 金の手SS</h2>
+
+    <div class="area-note">
+        ※採取面積：219 × 2 ＝ 438 cm²
+    </div>
+
+    <p>測定値（S/m）</p>
+
+    <input
+        id="value1"
+        type="number"
+        step="any"
+        placeholder="数値を入力">
+
+    <br><br>
+
+    <button onclick="calculate('value1','result1',438)">
+        計算
+    </button>
+
+    <div id="result1" class="result"></div>
+
+</div>
+
+<!-- パイロット碍子上面 -->
+
+<div class="section">
+
+    <h2>② パイロット碍子上面</h2>
+
+    <div class="area-note">
+        ※採取面積：550 cm²
+    </div>
+
+    <p>測定値（S/m）</p>
+
+    <input
+        id="value2"
+        type="number"
+        step="any"
+        placeholder="数値を入力">
+
+    <br><br>
+
+    <button onclick="calculate('value2','result2',550)">
+        計算
+    </button>
+
+    <div id="result2" class="result"></div>
+
+</div>
+
+<!-- パイロット碍子下面 -->
+
+<div class="section">
+
+    <h2>③ パイロット碍子下面</h2>
+
+    <div class="area-note">
+        ※採取面積：800 cm²
+    </div>
+
+    <p>測定値（S/m）</p>
+
+    <input
+        id="value3"
+        type="number"
+        step="any"
+        placeholder="数値を入力">
+
+    <br><br>
+
+    <button onclick="calculate('value3','result3',800)">
+        計算
+    </button>
+
+    <div id="result3" class="result"></div>
+
+</div>
+
+<script>
+
+function calculate(valueId, resultId, area) {
+
+    const value = parseFloat(
+        document.getElementById(valueId).value
+    );
+
+    if (isNaN(value)) {
+
+        document.getElementById(resultId).innerHTML =
+        "<p>測定値を入力してください</p>";
+
+        return;
+    }
+
+    const conductivity = value * 10000;
+    const saltAmount = conductivity * 0.095;
+    const density = saltAmount / area;
+
+    document.getElementById(resultId).innerHTML = `
+
+    <h3>使用公式</h3>
+
+    <p>
+    導電率（μS/cm）<br>
+    ＝ 導電率（S/m）× 10000
+    </p>
+
+    <p>
+    塩分量（mg）<br>
+    ＝ 導電率（μS/cm）× 0.095（定数）
+    </p>
+
+    <p>
+    等価塩分付着密度（mg/cm²）<br>
+    ＝ 塩分量（mg）÷ 採取面積（cm²）
+    </p>
+
+    <hr>
+
+    <h3>計算過程</h3>
+
+    <p>
+    <strong>① 導電率換算</strong><br>
+    ${value} × 10000<br>
+    ＝ ${conductivity.toFixed(2)} μS/cm
+    </p>
+
+    <p>
+    <strong>② 塩分量計算</strong><br>
+    ${conductivity.toFixed(2)} × 0.095<br>
+    ＝ ${saltAmount.toFixed(2)} mg
+    </p>
+
+    <p>
+    <strong>③ 等価塩分付着密度計算</strong><br>
+    ${saltAmount.toFixed(2)} ÷ ${area} cm²<br>
+    ＝ ${density.toFixed(4)} mg/cm²
+    </p>
+
+    <hr>
+
+    <div class="final-result">
+    最終結果<br>
+    等価塩分付着密度<br>
+    ${density.toFixed(4)} mg/cm²
+    </div>
+
+    `;
+
+}
+
+</script>
+
+</body>
+</html>
